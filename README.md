@@ -1,4 +1,4 @@
-# wl_temp
+# white_label_app
 
 A new Flutter project.
 

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/wl_temp.iml" filepath="$PROJECT_DIR$/wl_temp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android/wl_temp_android.iml" filepath="$PROJECT_DIR$/android/wl_temp_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/white_label_app.iml" filepath="$PROJECT_DIR$/white_label_app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/white_label_app_android.iml" filepath="$PROJECT_DIR$/android/white_label_app_android.iml" />
     </modules>
   </component>
 </project>

@@ -36,11 +36,6 @@ migrate_working_dir/
 # Symbolication related
 app.*.symbols
 
-
-*.idea/
-.idea/libraries/*
-Dart_SDK.xml
-
 # Obfuscation related
 app.*.map.json
 
