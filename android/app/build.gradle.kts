@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -20,21 +19,61 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.white_label_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+    signingConfigs {
+        create("brandA") {
+            storeFile     = file("keystores/brandA.jks")
+            storePassword = project.findProperty("BRANDA_STORE_PASS") as String
+            keyAlias      = project.findProperty("BRANDA_KEY_ALIAS") as String
+            keyPassword   = project.findProperty("BRANDA_KEY_PASS")  as String
+        }
+        create("brandB") {
+            storeFile     = file("keystores/brandB.jks")
+            storePassword = project.findProperty("BRANDB_STORE_PASS") as String
+            keyAlias      = project.findProperty("BRANDB_KEY_ALIAS") as String
+            keyPassword   = project.findProperty("BRANDB_KEY_PASS")  as String
+        }
+    }
+
+    flavorDimensions += "app"
+    productFlavors {
+        create("dev") {
+            dimension           = "app"
+            resValue("string", "app_name", "MyApp Dev")
             signingConfig = signingConfigs.getByName("debug")
+        }
+        create("brandA") {
+            dimension           = "app"
+            applicationIdSuffix = ".brandA"
+            versionNameSuffix   = "-brandA"
+            resValue("string", "app_name", "MyApp BrandA")
+            signingConfig = signingConfigs.getByName("brandA")
+        }
+        create("brandB") {
+            dimension           = "app"
+            applicationIdSuffix = ".brandB"
+            versionNameSuffix   = "-brandB"
+            resValue("string", "app_name", "MyApp BrandB")
+            signingConfig = signingConfigs.getByName("brandB")
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        release {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
