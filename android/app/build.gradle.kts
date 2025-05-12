@@ -1,3 +1,11 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val keystorePropsFile = File(project.projectDir, "keystore.properties")
+val keystoreProperties = Properties().apply {
+    load(FileInputStream(keystorePropsFile))
+}
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -27,17 +35,11 @@ android {
     }
 
     signingConfigs {
-        create("brandA") {
-            storeFile     = file("keystores/brandA.jks")
-            storePassword = project.findProperty("BRANDA_STORE_PASS") as String
-            keyAlias      = project.findProperty("BRANDA_KEY_ALIAS") as String
-            keyPassword   = project.findProperty("BRANDA_KEY_PASS")  as String
-        }
-        create("brandB") {
-            storeFile     = file("keystores/brandB.jks")
-            storePassword = project.findProperty("BRANDB_STORE_PASS") as String
-            keyAlias      = project.findProperty("BRANDB_KEY_ALIAS") as String
-            keyPassword   = project.findProperty("BRANDB_KEY_PASS")  as String
+        create("releaseConfig") {
+            storeFile     = file(keystoreProperties.getProperty("STORE_FILE"))
+            storePassword = keystoreProperties.getProperty("STORE_PASSWORD")
+            keyAlias      = keystoreProperties.getProperty("KEY_ALIAS")
+            keyPassword   = keystoreProperties.getProperty("KEY_PASSWORD")
         }
     }
 
@@ -53,27 +55,28 @@ android {
             applicationIdSuffix = ".brandA"
             versionNameSuffix   = "-brandA"
             resValue("string", "app_name", "MyApp BrandA")
-            signingConfig = signingConfigs.getByName("brandA")
+            signingConfig = signingConfigs.getByName("releaseConfig")
         }
         create("brandB") {
             dimension           = "app"
             applicationIdSuffix = ".brandB"
             versionNameSuffix   = "-brandB"
             resValue("string", "app_name", "MyApp BrandB")
-            signingConfig = signingConfigs.getByName("brandB")
+            signingConfig = signingConfigs.getByName("releaseConfig")
         }
     }
 
     buildTypes {
-        debug {
+        getByName("debug") {
             signingConfig = signingConfigs.getByName("debug")
         }
-        release {
+        getByName("release") {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("releaseConfig")
         }
     }
 }
